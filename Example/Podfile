@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Promis_Example' do
+  pod 'Promis', :path => '../'
+
+  target 'Promis_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
