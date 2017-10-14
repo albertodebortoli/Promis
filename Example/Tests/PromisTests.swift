@@ -128,7 +128,7 @@ class PromisTests: XCTestCase {
         }
         
         XCTAssertTrue(f.hasError())
-        XCTAssertNotNil(f.error)
+        XCTAssert((f.error as! PromisError) == .promiseDeallocatedBeforeBeingResolved)
     }
     
     func test_GivenPromise_WhenFutureIsAskedToWaitUntilDateAndSetResult_ThenFutureHasResult() {

@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum PromisError: Error {
+    case futureContinuationAlreadySet
+    case promiseDeallocatedBeforeBeingResolved
+}
+
 public enum FutureState<FutureType> {
     case unresolved
     case result(FutureType)
@@ -171,7 +176,9 @@ public class Future<FutureType>: NSObject {
     // MARK: Chaining
     
     public func continues(queue: DispatchQueue? = nil, block: @escaping (Future<FutureType>) -> Void) {
-        setContinuation { future in
+        // rather than making all the chaining APIs 
+        // if a continuation has already been set, a crash is desired
+        try! setContinuation { future in
             if let queue = queue {
                 queue.async {
                     block(future)
@@ -302,12 +309,11 @@ public class Future<FutureType>: NSObject {
     
     // MARK: Chaining (Private)
     
-    private func setContinuation(_ block: @escaping (Future) -> Void) {
+    private func setContinuation(_ block: @escaping (Future) -> Void) throws {
         cv.lock()
         guard continuation == nil else {
             cv.unlock()
-            assertionFailure("Continuation already attached")
-            return
+            throw PromisError.futureContinuationAlreadySet
         }
         continuation = block
         let resolved = state != .unresolved
@@ -330,7 +336,7 @@ public class Promise<FutureType>: NSObject {
     
     deinit {
         if (!future.isResolved()) {
-            let error = NSError(domain:"Promise was not satisfied", code:0, userInfo:nil)
+            let error = PromisError.promiseDeallocatedBeforeBeingResolved
             setError(error)
         }
     }
