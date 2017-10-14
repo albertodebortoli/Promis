@@ -22,8 +22,8 @@ pod 'Promis'
 
 ## Author
 
-albertodebortoli@gmail.com, alberto.debortoli@just-eat.com
+Alberto De Bortoli albertodebortoli@gmail.com
 
 ## License
 
-Promis is available under the MIT license. See the LICENSE file for more info.
+Promis is available under the Apache 2 license. See the LICENSE file for more info.
