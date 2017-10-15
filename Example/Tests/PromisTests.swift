@@ -285,7 +285,7 @@ class PromisTests: XCTestCase {
         XCTAssertEqual(f2.result!, "12")
     }
     
-    func test_GivenPromise_WhenFutureContinuesWithSuccessTaskAndResultIsSet_ThenResultIsSetOnSubsequentFuture() {
+    func test_GivenPromise_WhenFutureContinuesWithResultAndResultIsSet_ThenResultIsSetOnSubsequentFuture() {
         let p = Promise<String>()
         let f = p.future
         
@@ -300,7 +300,7 @@ class PromisTests: XCTestCase {
         XCTAssertEqual(f2.result!, "12")
     }
     
-    func test_GivenPromise_WhenFutureContinuesWithSuccessTaskAndErrorIsSet_ThenSubsequentFutureHasError() {
+    func test_GivenPromise_WhenFutureContinuesWithResultAndErrorIsSet_ThenSubsequentFutureHasError() {
         let p = Promise<String>()
         let f = p.future
         
@@ -317,7 +317,7 @@ class PromisTests: XCTestCase {
         XCTAssertEqual(f2.error! as NSError, error)
     }
     
-    func test_GivenPromise_WhenFutureContinuesWithSuccessTaskAndIsCancelled_ThenSubsequentFutureIsCancelled() {
+    func test_GivenPromise_WhenFutureContinuesWithResultAndIsCancelled_ThenSubsequentFutureIsCancelled() {
         let p = Promise<String>()
         let f = p.future
         
@@ -333,7 +333,7 @@ class PromisTests: XCTestCase {
         XCTAssertNil(f2.result)
     }
     
-    func test_GivenPromise_WhenContinuesWithSuccessCancelledTask_ThenFutureIsCancelled() {
+    func test_GivenPromise_WhenContinuesWithResultAndCancelledFuture_ThenFutureIsCancelled() {
         let p = Promise<String>()
         let f = p.future
         
@@ -347,7 +347,7 @@ class PromisTests: XCTestCase {
         XCTAssertNil(f2.result)
     }
     
-    func test_GivenPromise_WhenContinuesWithSuccessAndSetResult_ThenFutureHasResult() {
+    func test_GivenPromise_WhenContinuesWithResultAndSetResult_ThenFutureHasResult() {
         let p = Promise<String>()
         let f = p.future
 
@@ -366,7 +366,7 @@ class PromisTests: XCTestCase {
         XCTAssertEqual(f2.result!, "12")
     }
 
-    func test_GivenPromise_WhenContinuesWithSuccessCancelledTaskOnGlobalQueue_ThenFutureIsCancelled() {
+    func test_GivenPromise_WhenContinuesWithResultOnGlobalQueueAndCancelled_ThenFutureIsCancelled() {
         let p = Promise<String>()
         let f = p.future
         
@@ -381,6 +381,102 @@ class PromisTests: XCTestCase {
         f2.wait()
         XCTAssertTrue(f2.isCancelled)
         XCTAssertNil(f2.result)
+    }
+    
+    func test_GivenPromise_WhenFutureContinuesWithErrorAndResultIsSet_ThenSubsequentFutureHasError() {
+        let p = Promise<String>()
+        let f = p.future
+    
+        let exp: XCTestExpectation = expectation(description: "test expectation")
+        
+        let f2 = f.continueWithError { err in
+            XCTAssert(false, "This block should not be called")
+            }.continueWithTask { future -> Future<String> in
+                XCTAssert(true, "This block should be called")
+                exp.fulfill()
+                return Future.futureWithResolutionOfFuture(future)
+        }
+        
+        p.setResult("1")
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertTrue(f2.hasResult())
+        XCTAssertEqual(f2.result!, "1")
+    }
+    
+    func test_GivenPromise_WhenFutureContinuesWithErrorAndErrorIsSet_ThenSubsequentFutureHasError() {
+        let p = Promise<String>()
+        let f = p.future
+        
+        let exp: XCTestExpectation = expectation(description: "test expectation")
+        
+        let f2 = f.continueWithError { err in
+            XCTAssert(true, "This block should be called")
+            }.continueWithTask { future -> Future<String> in
+                XCTAssert(true, "This block should be called")
+                exp.fulfill()
+                return Future.futureWithResolutionOfFuture(future)
+        }
+        
+        let error = NSError(domain: TestErrorDomain, code:0, userInfo:nil)
+        p.setError(error)
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertTrue(f2.hasError())
+        XCTAssertEqual(f2.error! as NSError, error)
+    }
+    
+    func test_GivenPromise_WhenFutureContinuesWithErrorAndIsCancelled_ThenSubsequentFutureIsCancelled() {
+        let p = Promise<String>()
+        let f = p.future
+        
+        let f2 = f.continueWithError { err in
+            XCTAssert(false, "This block should not be called")
+        }
+        
+        p.setCancelled()
+        
+        XCTAssertTrue(f2.isCancelled)
+        XCTAssertNil(f2.result)
+    }
+    
+    func test_GivenPromise_WhenContinuesWithErrorAndSetResult_ThenFutureHasResult() {
+        let p = Promise<String>()
+        let f = p.future
+        
+        let queue = DispatchQueue.global()
+        
+        let f2 = f.continueWithError(queue: queue) { err in
+            XCTAssert(false, "This block should not be called")
+        }
+        
+        p.setResult("1")
+        
+        f2.wait()
+        XCTAssertTrue(f2.hasResult())
+        XCTAssertEqual(f2.result!, "1")
+    }
+    
+    func test_GivenPromise_WhenContinuesWithErrorOnGlobalQueueAndSetError_ThenFutureHasError() {
+    let p = Promise<String>()
+        let f = p.future
+        
+        let exp: XCTestExpectation = expectation(description: "test expectation")
+        
+        let queue = DispatchQueue.global()
+        
+        let f2 = f.continueWithError(queue: queue) { err in
+            exp.fulfill()
+        }
+        
+        let error = NSError(domain: TestErrorDomain, code:0, userInfo:nil)
+        p.setError(error)
+        
+        f2.wait()
+        
+        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertTrue(f2.hasError())
+        XCTAssertNotNil(f2.error)
     }
     
     func test_GivenPromises_WhenAllPromisesSucceeded_ThenWhenAllFutureHasResult() {

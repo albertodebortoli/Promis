@@ -205,9 +205,10 @@ public class Future<FutureType>: NSObject {
     public func continueWithResult<NextFutureType>(queue: DispatchQueue? = nil, resultTask: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
         let promise = Promise<NextFutureType>()
         continues { future in
-            if future.hasResult(), let result = future.result {
+            switch self.state {
+            case .result(let val):
                 let execution = {
-                    let f2 = resultTask(result)
+                    let f2 = resultTask(val)
                     f2.continues { fut2 in
                         promise.setResolutionOfFuture(fut2)
                     }
@@ -219,9 +220,32 @@ public class Future<FutureType>: NSObject {
                 } else {
                     execution()
                 }
-            }
-            else {
+            default:
                 promise.setResolutionOfFutureNotResolvedWithResult(future)
+            }
+        }
+        return promise.future
+    }
+    
+    @discardableResult
+    public func continueWithError(queue: DispatchQueue? = nil, resultTask: @escaping (Error) -> Void) -> Future {
+        let promise = Promise<FutureType>()
+        continues { future in
+            switch self.state {
+            case .error(let err):
+                let execution = {
+                    resultTask(err)
+                    promise.setResolutionOfFuture(future)
+                }
+                if let queue = queue {
+                    queue.async {
+                        execution()
+                    }
+                } else {
+                    execution()
+                }
+            default:
+                promise.setResolutionOfFuture(future)
             }
         }
         return promise.future
