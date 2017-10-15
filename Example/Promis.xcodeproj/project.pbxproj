@@ -33,6 +33,7 @@
 		30D90EC29B9E450D4458B7FD /* Pods_Promis_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Promis_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A44220EE0C9A6CB6656F5C /* Pods-Promis_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Promis_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Promis_Tests/Pods-Promis_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		4F120A6A1F92CC5400A0228F /* PromisTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromisTests.swift; sourceTree = "<group>"; };
+		4F39FD8B1F93E77D0034F4C3 /* GettingStarted.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = GettingStarted.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4FA5AAE5E15C6C42C8A57CA5 /* Promis.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Promis.podspec; path = ../Promis.podspec; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Promis_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Promis_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -72,6 +73,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				4F39FD8B1F93E77D0034F4C3 /* GettingStarted.playground */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Promis */,
 				607FACE81AFB9204008FA782 /* Tests */,
