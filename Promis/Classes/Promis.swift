@@ -176,7 +176,7 @@ public class Future<FutureType>: NSObject {
     // MARK: Chaining
     
     public func finally(queue: DispatchQueue? = nil, block: @escaping (Future<FutureType>) -> Void) {
-        // rather than making all the chaining APIs 
+        // rather than making all the chaining APIs throwable
         // if a continuation has already been set, a crash is desired
         try! setContinuation { future in
             if let queue = queue {
