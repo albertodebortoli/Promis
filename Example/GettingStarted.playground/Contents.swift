@@ -11,14 +11,14 @@ func exampleTask() {
     
     let request = URLRequest(url: URL(string: "http://example.com")!)
     
-    download(request: request).continueWithResult { data in
+    download(request: request).thenWithResult { data in
         parse(data: data)
-        }.continueWithResult { parsedData in
+        }.thenWithResult { parsedData in
             map(data: parsedData)
-        }.continueWithError { error in
+        }.onError { error in
             // executed only in case an error occurred in the chain
             print("error: " + String(describing: error))
-        }.continues { future in
+        }.finally { future in
             print(future)
     }
 }
@@ -48,7 +48,7 @@ func parse(data: Data) -> Future<[Dictionary<String,AnyObject>]> {
     }
     // could simply return promise.future, but specific error handling/logging
     // should be done here as part of the responsibilities of the function
-    return promise.future.continueWithError(resultTask: {error in
+    return promise.future.onError(resultTask: {error in
         // handle/log error
     })
 }

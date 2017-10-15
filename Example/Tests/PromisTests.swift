@@ -149,7 +149,7 @@ class PromisTests: XCTestCase {
         let f = p.future
         
         let exp: XCTestExpectation = expectation(description: "test expectation")
-        f.continues { future in
+        f.finally { future in
             XCTAssertEqual(future.result, "1")
             exp.fulfill()
         }
@@ -165,7 +165,7 @@ class PromisTests: XCTestCase {
         let exp: XCTestExpectation = expectation(description: "test expectation")
         let queue = DispatchQueue.global()
         
-        f.continues(queue: queue) { future in
+        f.finally(queue: queue) { future in
             XCTAssertEqual(future.result, "1")
             exp.fulfill()
         }
@@ -178,7 +178,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithTask { future -> Future<String> in
+        let f2 = f.then { future -> Future<String> in
             let p = Promise<String>()
             p.setResult(future.result! + "2")
             return p.future
@@ -193,7 +193,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithTask { future -> Future<String> in
+        let f2 = f.then { future -> Future<String> in
             let p = Promise<String>()
             return p.future
         }
@@ -207,7 +207,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithTask { future -> Future<String> in
+        let f2 = f.then { future -> Future<String> in
             let p = Promise<String>()
             
             let queue = DispatchQueue.global()
@@ -228,7 +228,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithTask { future -> Future<String> in
+        let f2 = f.then { future -> Future<String> in
             XCTAssertTrue(future.hasResult())
             return Future.futureWithResolutionOfFuture(future)
         }
@@ -242,7 +242,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithTask { future -> Future<String> in
+        let f2 = f.then { future -> Future<String> in
             XCTAssertTrue(future.hasError())
             return Future<String>.futureWithResolutionOfFuture(future)
         }
@@ -257,7 +257,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithTask { future -> Future<String> in
+        let f2 = f.then { future -> Future<String> in
             XCTAssertTrue(future.isCancelled)
             return Future.futureWithResolutionOfFuture(future)
         }
@@ -272,7 +272,7 @@ class PromisTests: XCTestCase {
         
         let queue = DispatchQueue.global()
         
-        let f2 = f.continueWithTask(queue: queue) { future -> Future<String> in
+        let f2 = f.then(queue: queue) { future -> Future<String> in
             let p = Promise<String>()
             p.setResult(future.result! + "2")
             return p.future
@@ -289,7 +289,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithResult { val -> Future<String> in
+        let f2 = f.thenWithResult { val -> Future<String> in
             let p = Promise<String>()
             p.setResult(val + "2")
             return p.future
@@ -304,7 +304,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithResult { val -> Future<String> in
+        let f2 = f.thenWithResult { val -> Future<String> in
             let p = Promise<String>()
             p.setResult(val + "2")
             return p.future
@@ -321,7 +321,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithResult { val -> Future<String> in
+        let f2 = f.thenWithResult { val -> Future<String> in
             XCTAssert(false, "This block should not be called")
             let p = Promise<String>()
             p.setResult(val + "2")
@@ -337,7 +337,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithResult { val in
+        let f2 = f.thenWithResult { val in
             return Future<String>.cancelledFuture()
         }
         
@@ -353,7 +353,7 @@ class PromisTests: XCTestCase {
 
         let queue = DispatchQueue.global()
 
-        let f2 = f.continueWithResult(queue: queue) { val -> Future<String> in
+        let f2 = f.thenWithResult(queue: queue) { val -> Future<String> in
             let p = Promise<String>()
             p.setResult(val + "2")
             return p.future
@@ -372,7 +372,7 @@ class PromisTests: XCTestCase {
         
         let queue = DispatchQueue.global()
         
-        let f2 = f.continueWithResult(queue: queue) { val in
+        let f2 = f.thenWithResult(queue: queue) { val in
             return Future<String>.cancelledFuture()
         }
         
@@ -389,9 +389,9 @@ class PromisTests: XCTestCase {
     
         let exp: XCTestExpectation = expectation(description: "test expectation")
         
-        let f2 = f.continueWithError { err in
+        let f2 = f.onError { err in
             XCTAssert(false, "This block should not be called")
-            }.continueWithTask { future -> Future<String> in
+            }.then { future -> Future<String> in
                 XCTAssert(true, "This block should be called")
                 exp.fulfill()
                 return Future.futureWithResolutionOfFuture(future)
@@ -410,9 +410,9 @@ class PromisTests: XCTestCase {
         
         let exp: XCTestExpectation = expectation(description: "test expectation")
         
-        let f2 = f.continueWithError { err in
+        let f2 = f.onError { err in
             XCTAssert(true, "This block should be called")
-            }.continueWithTask { future -> Future<String> in
+            }.then { future -> Future<String> in
                 XCTAssert(true, "This block should be called")
                 exp.fulfill()
                 return Future.futureWithResolutionOfFuture(future)
@@ -430,7 +430,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        let f2 = f.continueWithError { err in
+        let f2 = f.onError { err in
             XCTAssert(false, "This block should not be called")
         }
         
@@ -446,7 +446,7 @@ class PromisTests: XCTestCase {
         
         let queue = DispatchQueue.global()
         
-        let f2 = f.continueWithError(queue: queue) { err in
+        let f2 = f.onError(queue: queue) { err in
             XCTAssert(false, "This block should not be called")
         }
         
@@ -465,7 +465,7 @@ class PromisTests: XCTestCase {
         
         let queue = DispatchQueue.global()
         
-        let f2 = f.continueWithError(queue: queue) { err in
+        let f2 = f.onError(queue: queue) { err in
             exp.fulfill()
         }
         

@@ -175,7 +175,7 @@ public class Future<FutureType>: NSObject {
     
     // MARK: Chaining
     
-    public func continues(queue: DispatchQueue? = nil, block: @escaping (Future<FutureType>) -> Void) {
+    public func finally(queue: DispatchQueue? = nil, block: @escaping (Future<FutureType>) -> Void) {
         // rather than making all the chaining APIs 
         // if a continuation has already been set, a crash is desired
         try! setContinuation { future in
@@ -190,11 +190,11 @@ public class Future<FutureType>: NSObject {
     }
     
     @discardableResult
-    public func continueWithTask<NextFutureType>(queue: DispatchQueue? = nil, task: @escaping (Future) -> Future<NextFutureType>) -> Future<NextFutureType> {
+    public func then<NextFutureType>(queue: DispatchQueue? = nil, task: @escaping (Future) -> Future<NextFutureType>) -> Future<NextFutureType> {
         let promise = Promise<NextFutureType>()
-        continues(queue: queue) { future in
+        finally(queue: queue) { future in
             let f2 = task(future)
-            f2.continues { fut2 in
+            f2.finally { fut2 in
                 promise.setResolutionOfFuture(fut2)
             }
         }
@@ -202,14 +202,14 @@ public class Future<FutureType>: NSObject {
     }
     
     @discardableResult
-    public func continueWithResult<NextFutureType>(queue: DispatchQueue? = nil, resultTask: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
+    public func thenWithResult<NextFutureType>(queue: DispatchQueue? = nil, resultTask: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
         let promise = Promise<NextFutureType>()
-        continues { future in
+        finally { future in
             switch self.state {
             case .result(let val):
                 let execution = {
                     let f2 = resultTask(val)
-                    f2.continues { fut2 in
+                    f2.finally { fut2 in
                         promise.setResolutionOfFuture(fut2)
                     }
                 }
@@ -228,9 +228,9 @@ public class Future<FutureType>: NSObject {
     }
     
     @discardableResult
-    public func continueWithError(queue: DispatchQueue? = nil, resultTask: @escaping (Error) -> Void) -> Future {
+    public func onError(queue: DispatchQueue? = nil, resultTask: @escaping (Error) -> Void) -> Future {
         let promise = Promise<FutureType>()
-        continues { future in
+        finally { future in
             switch self.state {
             case .error(let err):
                 let execution = {
@@ -257,7 +257,7 @@ public class Future<FutureType>: NSObject {
         let results = futures
         var counter = Int32(results.count)
         for element in futures {
-            element.continues { _ in
+            element.finally { _ in
                 if (OSAtomicDecrement32(&counter) == 0) {
                     promise.setResult(results)
                 }
