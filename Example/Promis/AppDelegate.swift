@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  Promis
 //
-//  Created by albertodebortoli@gmail.com on 10/14/2017.
-//  Copyright (c) 2017 albertodebortoli@gmail.com. All rights reserved.
+//  Created by Alberto De Bortoli on 10/14/2017.
+//  Copyright (c) 2017 Alberto De Bortoli. All rights reserved.
 //
 
 import UIKit
