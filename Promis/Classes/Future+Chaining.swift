@@ -31,7 +31,7 @@ extension Future {
         let promise = Promise<NextFutureType>()
         finally(queue: queue) { future in
             let f2 = task(future)
-            f2.finally { fut2 in
+            f2.finally(queue: queue) { fut2 in
                 promise.setResolutionOfFuture(fut2)
             }
         }
@@ -41,24 +41,14 @@ extension Future {
     @discardableResult
     public func thenWithResult<NextFutureType>(queue: DispatchQueue? = nil, resultTask: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
         let promise = Promise<NextFutureType>()
-        finally { future in
-            switch self.state {
-            case .result(let val):
-                let execution = {
-                    let f2 = resultTask(val)
-                    f2.finally { fut2 in
-                        promise.setResolutionOfFuture(fut2)
-                    }
-                }
-                if let queue = queue {
-                    queue.async {
-                        execution()
-                    }
-                } else {
-                    execution()
-                }
-            default:
+        finally(queue: queue) { future in
+            guard case .result(let value) = self.state else {
                 promise.setResolutionOfFutureNotResolvedWithResult(future)
+                return
+            }
+            let f2 = resultTask(value)
+            f2.finally(queue: queue) { fut2 in
+                promise.setResolutionOfFuture(fut2)
             }
         }
         return promise.future
@@ -67,23 +57,13 @@ extension Future {
     @discardableResult
     public func onError(queue: DispatchQueue? = nil, resultTask: @escaping (Error) -> Void) -> Future {
         let promise = Promise<FutureType>()
-        finally { future in
-            switch self.state {
-            case .error(let err):
-                let execution = {
-                    resultTask(err)
-                    promise.setResolutionOfFuture(future)
-                }
-                if let queue = queue {
-                    queue.async {
-                        execution()
-                    }
-                } else {
-                    execution()
-                }
-            default:
+        finally(queue: queue) { future in
+            guard case .error(let err) = self.state else {
                 promise.setResolutionOfFuture(future)
+                return
             }
+            resultTask(err)
+            promise.setResolutionOfFuture(future)
         }
         return promise.future
     }
