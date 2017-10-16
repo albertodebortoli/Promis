@@ -350,22 +350,22 @@ class PromisTests: XCTestCase {
     func test_GivenPromise_WhenContinuesWithResultAndSetResult_ThenFutureHasResult() {
         let p = Promise<String>()
         let f = p.future
-
+        
         let queue = DispatchQueue.global()
-
+        
         let f2 = f.thenWithResult(queue: queue) { val -> Future<String> in
             let p = Promise<String>()
             p.setResult(val + "2")
             return p.future
         }
-
+        
         p.setResult("1")
-
+        
         f2.wait()
         XCTAssertTrue(f2.hasResult())
         XCTAssertEqual(f2.result!, "12")
     }
-
+    
     func test_GivenPromise_WhenContinuesWithResultOnGlobalQueueAndCancelled_ThenFutureIsCancelled() {
         let p = Promise<String>()
         let f = p.future
@@ -386,7 +386,7 @@ class PromisTests: XCTestCase {
     func test_GivenPromise_WhenFutureContinuesWithErrorAndResultIsSet_ThenSubsequentFutureHasError() {
         let p = Promise<String>()
         let f = p.future
-    
+        
         let exp: XCTestExpectation = expectation(description: "test expectation")
         
         let f2 = f.onError { err in
@@ -458,7 +458,7 @@ class PromisTests: XCTestCase {
     }
     
     func test_GivenPromise_WhenContinuesWithErrorOnGlobalQueueAndSetError_ThenFutureHasError() {
-    let p = Promise<String>()
+        let p = Promise<String>()
         let f = p.future
         
         let exp: XCTestExpectation = expectation(description: "test expectation")
@@ -477,6 +477,15 @@ class PromisTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertTrue(f2.hasError())
         XCTAssertNotNil(f2.error)
+    }
+    
+    func test_GivenPromise_WhenSetContinuationTwice_ThemExceptionIsRaised() {
+        let p = Promise<String>()
+        let f = p.future
+        
+        try! f.setContinuation { future in }
+                
+        XCTAssertThrowsError(try f.setContinuation { future in })
     }
     
     func test_GivenPromises_WhenAllPromisesSucceeded_ThenWhenAllFutureHasResult() {
@@ -501,7 +510,7 @@ class PromisTests: XCTestCase {
         XCTAssertEqual(results[1].result!, "2")
         XCTAssertEqual(results[2].result!, "3")
     }
-
+    
     func test_GivenPromises_WhenAllPromisesAreSatisfied_ThenWhenAllFutureHasResult() {
         let p1 = Promise<String>()
         let p2 = Promise<String>()

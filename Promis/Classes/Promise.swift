@@ -66,9 +66,8 @@ public class Promise<FutureType>: NSObject {
             setResult(value)
         case .error(let err):
             setError(err)
-        case .cancelled:
+        default:
             setCancelled()
-        default: break
         }
     }
     
@@ -81,13 +80,10 @@ public class Promise<FutureType>: NSObject {
      */
     func setResolutionOfFutureNotResolvedWithResult<PrevFutureType>(_ future: Future<PrevFutureType>) {
         switch future.state {
-        case .result(_):
-            break
         case .error(let err):
             setError(err)
-        case .cancelled:
+        default:
             setCancelled()
-        default: break
         }
     }
 }

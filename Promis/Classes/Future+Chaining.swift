@@ -105,7 +105,7 @@ extension Future {
      
      - parameter block: The block to execute as continuation of the future receiving the receiver as a parameter.
     */
-    private func setContinuation(_ block: @escaping (Future) -> Void) throws {
+    func setContinuation(_ block: @escaping (Future) -> Void) throws {
         cv.lock()
         guard continuation == nil else {
             cv.unlock()
