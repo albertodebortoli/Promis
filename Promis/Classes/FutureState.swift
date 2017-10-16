@@ -15,24 +15,17 @@ public enum FutureState<FutureType> {
     case cancelled
     
     func getResult() -> FutureType? {
-        switch self {
-        case .result(let res): return res
-        default: return nil
-        }
+        guard case .result(let value) = self else { return nil }
+        return value
     }
     
     func getError() -> Error? {
-        switch self {
-        case .error(let err): return err
-        default: return nil
-        }
+        guard case .error(let err) = self else { return nil }
+        return err
     }
     
     func isCancelled() -> Bool {
-        switch self {
-        case .cancelled: return true
-        default: return false
-        }
+        return self == .cancelled
     }
 }
 
