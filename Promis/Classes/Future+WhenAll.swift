@@ -10,6 +10,13 @@ import Foundation
 
 extension Future {
     
+    /**
+     Creates and returns a future that is resolved when all the futures passed as parametes are resolved.
+     
+     - parameter futures: An array of futures
+     
+     - returns: A future of type [Future] with the resolutions of all the futures passed as parameters.
+     */
     @discardableResult
     public class func whenAll(_ futures: [Future]) -> Future<[Future]> {
         let promise = Promise<[Future]>()

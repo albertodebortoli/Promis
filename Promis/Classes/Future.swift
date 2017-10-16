@@ -25,24 +25,50 @@ public class Future<FutureType>: NSObject {
     
     // MARK: Creation
     
+    /**
+     Initializes a new resolved future with a result.
+     
+     - parameter result: The result to use to resolve the future
+     
+     - returns: A newly created future, resolved with result.
+     */
     public class func futureWithResult(_ result: FutureType) -> Future<FutureType> {
         let promise = Promise<FutureType>()
         promise.setResult(result)
         return promise.future
     }
     
+    /**
+     Initializes a new resolved future with an error.
+     
+     - parameter error: The error to use to resolve the future
+     
+     - returns: A newly created future, resolved with error.
+     */
     public class func futureWithError(_ error: Error) -> Future<FutureType> {
         let promise = Promise<FutureType>()
         promise.setError(error)
         return promise.future
     }
     
+    /**
+     Initializes a new resolved future in cancelled state.
+     
+     - returns: A newly created future, resolved with cancellation.
+     */
     public class func cancelledFuture() -> Future<FutureType> {
         let promise = Promise<FutureType>()
         promise.setCancelled()
         return promise.future
     }
     
+    /**
+     Initializes a new resolved future.
+     
+     - parameter future: The future with the state to use to resolve the returning future
+     
+     - returns: A newly created and resolved future.
+     */
     public class func futureWithResolutionOfFuture(_ future: Future<FutureType>) -> Future<FutureType> {
         switch future.state {
         case .result(let value):
@@ -56,6 +82,9 @@ public class Future<FutureType>: NSObject {
     
     // MARK: Resolution
     
+    /**
+     If the receiver is not resolved, the function waits for resolution before returning the result.
+     */
     public var result: FutureType? {
         get {
             wait()
@@ -63,6 +92,9 @@ public class Future<FutureType>: NSObject {
         }
     }
     
+    /**
+     If the receiver is not resolved, the function waits for resolution before returning the error.
+     */
     public var error: Error? {
         get {
             wait()
@@ -70,6 +102,9 @@ public class Future<FutureType>: NSObject {
         }
     }
     
+    /**
+     If the receiver is not resolved, the function waits for resolution before returning if it was cancelled.
+     */
     public var isCancelled: Bool {
         get {
             return state.isCancelled()
@@ -78,13 +113,18 @@ public class Future<FutureType>: NSObject {
     
     // MARK: State checks
     
+    /**
+     True if the future is in a resolved state, false otherwise.
+     */
     public func isResolved() -> Bool {
         cv.lock()
         let retVal = state != FutureState<FutureType>.unresolved
         cv.unlock()
         return retVal
     }
-    
+    /**
+     True if the future has a result, false otherwise.
+     */
     public func hasResult() -> Bool {
         cv.lock()
         let retVal = (state.getResult() != nil)
@@ -92,6 +132,9 @@ public class Future<FutureType>: NSObject {
         return retVal
     }
     
+    /**
+     True if the future has an error, false otherwise.
+     */
     public func hasError() -> Bool {
         cv.lock()
         let retVal = (state.getError() != nil)
@@ -101,6 +144,9 @@ public class Future<FutureType>: NSObject {
     
     // MARK: Waiting for resolution
     
+    /**
+     Blocks the current thread waiting for the receiver to be resolved.
+     */
     public func wait() {
         cv.lock()
         while (state == .unresolved) {
@@ -109,11 +155,14 @@ public class Future<FutureType>: NSObject {
         cv.unlock()
     }
     
-    public func waitUntilDate(_ timeout: Date) -> Bool {
+    /**
+     Blocks the current thread waiting for the receiver to be resolved before a given date.
+     */
+    public func waitUntilDate(_ date: Date) -> Bool {
         cv.lock()
         var timeoutExpired = false
         while (state == .unresolved && !timeoutExpired) {
-            timeoutExpired = !cv.wait(until: timeout)
+            timeoutExpired = !cv.wait(until: date)
         }
         cv.unlock()
         return !timeoutExpired
@@ -121,6 +170,11 @@ public class Future<FutureType>: NSObject {
     
     // MARK: State setting (Private)
     
+    /**
+     Resolves the receiver by setting a result.
+     
+     - parameter result: The result to use for the resolution.
+     */
     func setResult(_ result: FutureType) {
         cv.lock()
         assert(state == .unresolved, "Cannot set result. Future already resolved")
@@ -137,6 +191,11 @@ public class Future<FutureType>: NSObject {
         }
     }
     
+    /**
+     Resolves the receiver by setting an error.
+     
+     - parameter error: The error to use for the resolution.
+     */
     func setError(_ error: Error) {
         cv.lock()
         assert(state == .unresolved, "Cannot set error. Future already resolved")
@@ -153,6 +212,9 @@ public class Future<FutureType>: NSObject {
         }
     }
     
+    /**
+     Resolves the receiver by cancelling it.
+     */
     func cancel() {
         cv.lock()
         assert(state == .unresolved, "Cannot cancel. Future already resolved")
@@ -169,7 +231,12 @@ public class Future<FutureType>: NSObject {
         }
     }
     
-    private func stateString() -> String {
+    /**
+     The string representation of the state of the receiver.
+     
+     - returns: A string describing the state.
+     */
+    func stateString() -> String {
         var retVal: String = "Unresolved"
         switch state {
         case .result(let value):

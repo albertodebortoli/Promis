@@ -12,6 +12,12 @@ extension Future {
     
     // MARK: Chaining
     
+    /**
+     Continues the execution of the receiver with a finally block.
+     
+     - parameter queue: An optional queue used to execute the block on
+     - parameter block: The block to execute as continuation of the future receiving the receiver as a parameter
+     */
     public func finally(queue: DispatchQueue? = nil, block: @escaping (Future<FutureType>) -> Void) {
         // rather than making all the chaining APIs throwable
         // if a continuation has already been set, a crash is desired
@@ -26,6 +32,14 @@ extension Future {
         }
     }
     
+    /**
+     Continues the execution of the receiver allowing chaining.
+     
+     - parameter queue: An optional queue used to execute the block on
+     - parameter block: The block to execute as continuation of the future receiving the receiver as a parameter and returning a new future (possibly with a different type)
+     
+     - returns: A new future resolved with the resolution of the future returned by the block parameter.
+     */
     @discardableResult
     public func then<NextFutureType>(queue: DispatchQueue? = nil, task: @escaping (Future) -> Future<NextFutureType>) -> Future<NextFutureType> {
         let promise = Promise<NextFutureType>()
@@ -38,6 +52,14 @@ extension Future {
         return promise.future
     }
     
+    /**
+     Continues the execution of the receiver allowing chaining.
+     
+     - parameter queue: An optional queue used to execute the block on
+     - parameter block: The block to execute as continuation of the future receiving the result of the receiver as a parameter and returning a new future (possibly with a different type). The block is not execute if the receiver is not resolved with a result.
+     
+     - returns: A new future resolved with the resolution of the future returned by the block parameter.
+     */
     @discardableResult
     public func thenWithResult<NextFutureType>(queue: DispatchQueue? = nil, resultTask: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
         let promise = Promise<NextFutureType>()
@@ -54,6 +76,14 @@ extension Future {
         return promise.future
     }
     
+    /**
+     Continues the execution of the receiver allowing chaining.
+     
+     - parameter queue: An optional queue used to execute the block on
+     - parameter block: The block to execute as continuation of the future receiving the error of the receiver as a parameter. The block is not execute if the receiver is not resolved with error.
+     
+     - returns: A new future resolved with the resolution of the receiver.
+     */
     @discardableResult
     public func onError(queue: DispatchQueue? = nil, resultTask: @escaping (Error) -> Void) -> Future {
         let promise = Promise<FutureType>()
@@ -70,6 +100,11 @@ extension Future {
     
     // MARK: Chaining (Private)
     
+    /**
+     Continues the execution of the receiver with a finally block.
+     
+     - parameter block: The block to execute as continuation of the future receiving the receiver as a parameter.
+    */
     private func setContinuation(_ block: @escaping (Future) -> Void) throws {
         cv.lock()
         guard continuation == nil else {
