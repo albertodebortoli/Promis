@@ -78,7 +78,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        p.setCancelled()
+        p.cancel()
         XCTAssertTrue(f.isResolved())
         XCTAssertFalse(f.hasResult())
         XCTAssertFalse(f.hasError())
@@ -92,7 +92,7 @@ class PromisTests: XCTestCase {
         let p = Promise<String>()
         let f = p.future
         
-        p.setCancelled()
+        p.cancel()
         XCTAssert(f.state == .cancelled)
     }
     
@@ -262,7 +262,7 @@ class PromisTests: XCTestCase {
             return Future.futureWithResolutionOfFuture(future)
         }
         
-        p.setCancelled()
+        p.cancel()
         XCTAssertTrue(f2.isCancelled)
     }
     
@@ -328,7 +328,7 @@ class PromisTests: XCTestCase {
             return p.future
         }
         
-        p.setCancelled()
+        p.cancel()
         XCTAssertTrue(f2.isCancelled)
         XCTAssertNil(f2.result)
     }
@@ -434,7 +434,7 @@ class PromisTests: XCTestCase {
             XCTAssert(false, "This block should not be called")
         }
         
-        p.setCancelled()
+        p.cancel()
         
         XCTAssertTrue(f2.isCancelled)
         XCTAssertNil(f2.result)
@@ -520,7 +520,7 @@ class PromisTests: XCTestCase {
         let allFuture = Future.whenAll(futures)
         
         XCTAssertFalse(allFuture.hasResult())
-        p3.setCancelled()
+        p3.cancel()
         XCTAssertFalse(allFuture.hasResult())
         p1.setResult("1")
         XCTAssertFalse(allFuture.hasResult())
@@ -561,7 +561,7 @@ class PromisTests: XCTestCase {
     
     func test_GivenCanceledPromise_WhenPrintedDescription_ThenProperDescriptionIsPrinted() {
         let p = Promise<String>()
-        p.setCancelled()
+        p.cancel()
         let testValue = "Resolved with cancellation".lowercased()
         let targetValue = p.description.lowercased()
         XCTAssertNotNil(targetValue.range(of: testValue))

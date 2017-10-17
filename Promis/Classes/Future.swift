@@ -58,7 +58,7 @@ public class Future<FutureType>: NSObject {
      */
     public class func cancelledFuture() -> Future<FutureType> {
         let promise = Promise<FutureType>()
-        promise.setCancelled()
+        promise.cancel()
         return promise.future
     }
     

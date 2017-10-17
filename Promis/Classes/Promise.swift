@@ -51,7 +51,7 @@ public class Promise<FutureType>: NSObject {
     /**
      Resolves the receiver by cancelling it.
      */
-    public func setCancelled() {
+    public func cancel() {
         future.cancel()
     }
     
@@ -67,7 +67,7 @@ public class Promise<FutureType>: NSObject {
         case .error(let err):
             setError(err)
         default:
-            setCancelled()
+            cancel()
         }
     }
     
@@ -83,7 +83,7 @@ public class Promise<FutureType>: NSObject {
         case .error(let err):
             setError(err)
         default:
-            setCancelled()
+            cancel()
         }
     }
 }
