@@ -12,7 +12,7 @@ public class Future<FutureType>: NSObject {
     
     let cv: NSCondition
     var continuation: ((Future) -> Void)?
-    var state: FutureState<FutureType> = .unresolved
+    private(set) public var state: FutureState<FutureType> = .unresolved
     
     public override init() {
         self.cv = NSCondition()
