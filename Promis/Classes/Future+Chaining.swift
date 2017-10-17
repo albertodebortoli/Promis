@@ -61,14 +61,14 @@ extension Future {
      - returns: A new future resolved with the resolution of the future returned by the block parameter.
      */
     @discardableResult
-    public func thenWithResult<NextFutureType>(queue: DispatchQueue? = nil, resultTask: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
+    public func thenWithResult<NextFutureType>(queue: DispatchQueue? = nil, continuation: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
         let promise = Promise<NextFutureType>()
         finally(queue: queue) { future in
             guard case .result(let value) = self.state else {
                 promise.setResolutionOfFutureNotResolvedWithResult(future)
                 return
             }
-            let f2 = resultTask(value)
+            let f2 = continuation(value)
             f2.finally(queue: queue) { fut2 in
                 promise.setResolutionOfFuture(fut2)
             }
@@ -85,14 +85,14 @@ extension Future {
      - returns: A new future resolved with the resolution of the receiver.
      */
     @discardableResult
-    public func onError(queue: DispatchQueue? = nil, resultTask: @escaping (Error) -> Void) -> Future {
+    public func onError(queue: DispatchQueue? = nil, continuation: @escaping (Error) -> Void) -> Future {
         let promise = Promise<FutureType>()
         finally(queue: queue) { future in
             guard case .error(let err) = self.state else {
                 promise.setResolutionOfFuture(future)
                 return
             }
-            resultTask(err)
+            continuation(err)
             promise.setResolutionOfFuture(future)
         }
         return promise.future
