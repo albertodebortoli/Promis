@@ -1,5 +1,3 @@
-//: Playground - noun: a place where people can play
-
 import UIKit
 import Promis
 
@@ -7,25 +5,82 @@ enum GettingStartedError: Error {
     case malformedData
 }
 
-func exampleTask() {
+//: This is an example of basic usage chaining functions that return futures. The method mimics a common getData-parse-map sequence of actions.
+
+func basicExample() {
     
     let request = URLRequest(url: URL(string: "http://example.com")!)
     
-    download(request: request).thenWithResult { data in
+    // starts by hitting an API to download data
+    getData(request: request).thenWithResult { data in
+        // continue by parsing the retrieved data
         parse(data: data)
         }.thenWithResult { parsedData in
+            // continue by mapping the parsed data
             map(data: parsedData)
         }.onError { error in
             // executed only in case an error occurred in the chain
             print("error: " + String(describing: error))
-        }.finally { future in
-            print(future)
+        }.finally(queue: .main) { future in
+            // always executed, no matter the state of the previous future or how the chain did perform
+            switch future.state {
+            case .result(let value):
+                print(String(describing: value))
+            case .error(let err):
+                print(String(describing: err))
+            case .cancelled:
+                print("future is in a cancelled state")
+            case .unresolved:
+                print("this really cannot be if any chaining block is executed")
+            }
     }
 }
 
-// MARK: Internal
+func explicitTypesExample() {
+    
+    let request = URLRequest(url: URL(string: "http://example.com")!)
+    
+    // starts by hitting an API to download data
+    getData(request: request).thenWithResult { data -> Future<[Dictionary<String,AnyObject>]> in
+        /**
+         If a block is not trivial, Swift cannot infer the type of the closure and gives the error
+         'Unable to infer complex closure return type; add explicit type to disambiguate'
+         so you'll have to add `-> Future<<#NextFutureType#>> to the block signature
+         
+         You can make it complex just by adding a print statement.
+         
+         All the more reason to structure your code as done in first given example :)
+         */
+        print("complex closure")
+        return parse(data: data)
+        }.thenWithResult { parsedData -> Future<[FooBar]> in
+            // continue by mapping the parsed data
+            print("complex closure")
+            return map(data: parsedData)
+        }.onError { error in
+            // executed only in case an error occurred in the chain
+            // in the case of `onError`, Swift has no problem of inferring the type
+            // as the block does not return any future, chaining is done using the previous future
+            print("complex closure")
+            print("error: " + String(describing: error))
+        }.finally(queue: .main) { future in
+            // always executed, no matter the state of the previous future or how the chain did perform
+            switch future.state {
+            case .result(let value):
+                print(String(describing: value))
+            case .error(let err):
+                print(String(describing: err))
+            case .cancelled:
+                print("future is in a cancelled state")
+            case .unresolved:
+                print("this really cannot be if any chaining block is executed")
+            }
+    }
+}
 
-func download(request: URLRequest) -> Future<Data> {
+//: This method acts as a wrapper of a generic GET request to an API
+
+func getData(request: URLRequest) -> Future<Data> {
     print(#function)
     print("request: " + String(describing: request))
     let promise = Promise<Data>()
@@ -34,6 +89,8 @@ func download(request: URLRequest) -> Future<Data> {
     promise.setResult(data)
     return promise.future
 }
+
+//: This method parses a result retrieved from an API as Data
 
 func parse(data: Data) -> Future<[Dictionary<String,AnyObject>]> {
     print(#function)
@@ -50,12 +107,14 @@ func parse(data: Data) -> Future<[Dictionary<String,AnyObject>]> {
     // should be done here as part of the responsibilities of the function
     return promise.future.onError(resultTask: {error in
         // handle/log error
-    })
+    }
 }
 
 struct FooBar {
     let value: String
 }
+
+//: This method maps the previously parsed data to domain-specific object(s)
 
 func map(data: [Dictionary<String,AnyObject>]) -> Future<[FooBar]> {
     print(#function)
@@ -70,4 +129,4 @@ func map(data: [Dictionary<String,AnyObject>]) -> Future<[FooBar]> {
     return promise.future
 }
 
-exampleTask()
+basicExample()
