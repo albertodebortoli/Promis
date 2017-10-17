@@ -49,7 +49,7 @@ func explicitTypesExample() {
          
          You can make it complex just by adding a print statement.
          
-         All the more reason to structure your code as done in first given example :)
+         All the more reason to structure your code as done in the first given example :)
          */
         print("complex closure")
         return parse(data: data)
@@ -105,7 +105,7 @@ func parse(data: Data) -> Future<[Dictionary<String,AnyObject>]> {
     }
     // could simply return promise.future, but specific error handling/logging
     // should be done here as part of the responsibilities of the function
-    return promise.future.onError(resultTask: {error in
+    return promise.future.onError() {error in
         // handle/log error
     }
 }

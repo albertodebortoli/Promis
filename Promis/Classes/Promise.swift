@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class Promise<FutureType>: NSObject {
+public class Promise<ResultType>: NSObject {
     
-    public let future: Future<FutureType>
+    public let future: Future<ResultType>
     
     public override init() {
         self.future = Future()
@@ -35,7 +35,7 @@ public class Promise<FutureType>: NSObject {
      
      - parameter result: The result to use for the resolution.
      */
-    public func setResult(_ result: FutureType) {
+    public func setResult(_ result: ResultType) {
         future.setResult(result)
     }
     
@@ -60,7 +60,7 @@ public class Promise<FutureType>: NSObject {
      
      - parameter future: The future to use for the resolution.
      */
-    public func setResolutionOfFuture(_ future: Future<FutureType>) {
+    public func setResolutionOfFuture(_ future: Future<ResultType>) {
         switch future.state {
         case .result(let value):
             setResult(value)
@@ -78,7 +78,7 @@ public class Promise<FutureType>: NSObject {
      
      - parameter future: The future to use for the resolution.
      */
-    func setResolutionOfFutureNotResolvedWithResult<PrevFutureType>(_ future: Future<PrevFutureType>) {
+    func setResolutionOfFutureNotResolvedWithResult<PrevResultType>(_ future: Future<PrevResultType>) {
         switch future.state {
         case .error(let err):
             setError(err)

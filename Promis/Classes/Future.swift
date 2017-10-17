@@ -8,11 +8,11 @@
 
 import Foundation
 
-public class Future<FutureType>: NSObject {
+public class Future<ResultType>: NSObject {
     
     let cv: NSCondition
     var continuation: ((Future) -> Void)?
-    private(set) public var state: FutureState<FutureType> = .unresolved
+    private(set) public var state: FutureState<ResultType> = .unresolved
     
     public override init() {
         self.cv = NSCondition()
@@ -32,8 +32,8 @@ public class Future<FutureType>: NSObject {
      
      - returns: A newly created future, resolved with result.
      */
-    public class func futureWithResult(_ result: FutureType) -> Future<FutureType> {
-        let promise = Promise<FutureType>()
+    public class func futureWithResult(_ result: ResultType) -> Future<ResultType> {
+        let promise = Promise<ResultType>()
         promise.setResult(result)
         return promise.future
     }
@@ -45,8 +45,8 @@ public class Future<FutureType>: NSObject {
      
      - returns: A newly created future, resolved with error.
      */
-    public class func futureWithError(_ error: Error) -> Future<FutureType> {
-        let promise = Promise<FutureType>()
+    public class func futureWithError(_ error: Error) -> Future<ResultType> {
+        let promise = Promise<ResultType>()
         promise.setError(error)
         return promise.future
     }
@@ -56,8 +56,8 @@ public class Future<FutureType>: NSObject {
      
      - returns: A newly created future, resolved with cancellation.
      */
-    public class func cancelledFuture() -> Future<FutureType> {
-        let promise = Promise<FutureType>()
+    public class func cancelledFuture() -> Future<ResultType> {
+        let promise = Promise<ResultType>()
         promise.cancel()
         return promise.future
     }
@@ -69,7 +69,7 @@ public class Future<FutureType>: NSObject {
      
      - returns: A newly created and resolved future.
      */
-    public class func futureWithResolutionOfFuture(_ future: Future<FutureType>) -> Future<FutureType> {
+    public class func futureWithResolutionOfFuture(_ future: Future<ResultType>) -> Future<ResultType> {
         switch future.state {
         case .result(let value):
             return futureWithResult(value)
@@ -85,7 +85,7 @@ public class Future<FutureType>: NSObject {
     /**
      If the receiver is not resolved, the function waits for resolution before returning the result.
      */
-    public var result: FutureType? {
+    public var result: ResultType? {
         get {
             wait()
             return state.getResult()
@@ -118,7 +118,7 @@ public class Future<FutureType>: NSObject {
      */
     public func isResolved() -> Bool {
         cv.lock()
-        let retVal = state != FutureState<FutureType>.unresolved
+        let retVal = state != FutureState<ResultType>.unresolved
         cv.unlock()
         return retVal
     }
@@ -175,7 +175,7 @@ public class Future<FutureType>: NSObject {
      
      - parameter result: The result to use for the resolution.
      */
-    func setResult(_ result: FutureType) {
+    func setResult(_ result: ResultType) {
         cv.lock()
         assert(state == .unresolved, "Cannot set result. Future already resolved")
         

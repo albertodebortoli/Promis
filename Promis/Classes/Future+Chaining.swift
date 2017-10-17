@@ -18,7 +18,7 @@ extension Future {
      - parameter queue: An optional queue used to execute the block on
      - parameter block: The block to execute as continuation of the future receiving the receiver as a parameter
      */
-    public func finally(queue: DispatchQueue? = nil, block: @escaping (Future<FutureType>) -> Void) {
+    public func finally(queue: DispatchQueue? = nil, block: @escaping (Future<ResultType>) -> Void) {
         // rather than making all the chaining APIs throwable
         // if a continuation has already been set, a crash is desired
         try! setContinuation { future in
@@ -41,8 +41,8 @@ extension Future {
      - returns: A new future resolved with the resolution of the future returned by the block parameter.
      */
     @discardableResult
-    public func then<NextFutureType>(queue: DispatchQueue? = nil, task: @escaping (Future) -> Future<NextFutureType>) -> Future<NextFutureType> {
-        let promise = Promise<NextFutureType>()
+    public func then<NextResultType>(queue: DispatchQueue? = nil, task: @escaping (Future) -> Future<NextResultType>) -> Future<NextResultType> {
+        let promise = Promise<NextResultType>()
         finally(queue: queue) { future in
             let f2 = task(future)
             f2.finally(queue: queue) { fut2 in
@@ -61,8 +61,8 @@ extension Future {
      - returns: A new future resolved with the resolution of the future returned by the block parameter.
      */
     @discardableResult
-    public func thenWithResult<NextFutureType>(queue: DispatchQueue? = nil, continuation: @escaping (FutureType) -> Future<NextFutureType>) -> Future<NextFutureType> {
-        let promise = Promise<NextFutureType>()
+    public func thenWithResult<NextResultType>(queue: DispatchQueue? = nil, continuation: @escaping (ResultType) -> Future<NextResultType>) -> Future<NextResultType> {
+        let promise = Promise<NextResultType>()
         finally(queue: queue) { future in
             guard case .result(let value) = self.state else {
                 promise.setResolutionOfFutureNotResolvedWithResult(future)
@@ -86,7 +86,7 @@ extension Future {
      */
     @discardableResult
     public func onError(queue: DispatchQueue? = nil, continuation: @escaping (Error) -> Void) -> Future {
-        let promise = Promise<FutureType>()
+        let promise = Promise<ResultType>()
         finally(queue: queue) { future in
             guard case .error(let err) = self.state else {
                 promise.setResolutionOfFuture(future)

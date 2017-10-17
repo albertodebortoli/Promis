@@ -3,7 +3,7 @@
 //  Promis
 //
 //  Created by Alberto De Bortoli on 11/10/2017.
-//  Copyright © 2017 Just Eat. All rights reserved.
+//  Copyright © 2017 Alberto De Bortoli. All rights reserved.
 //
 
 import XCTest

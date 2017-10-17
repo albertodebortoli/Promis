@@ -8,13 +8,13 @@
 
 import Foundation
 
-public enum FutureState<FutureType> {
+public enum FutureState<ResultType> {
     case unresolved
-    case result(FutureType)
+    case result(ResultType)
     case error(Error)
     case cancelled
     
-    func getResult() -> FutureType? {
+    func getResult() -> ResultType? {
         guard case .result(let value) = self else { return nil }
         return value
     }
@@ -29,7 +29,7 @@ public enum FutureState<FutureType> {
     }
 }
 
-func ==<FutureType>(lhs: FutureState<FutureType>, rhs: FutureState<FutureType>) -> Bool {
+func ==<ResultType>(lhs: FutureState<ResultType>, rhs: FutureState<ResultType>) -> Bool {
     var equal: Bool = false
     switch (lhs, rhs) {
     case (.unresolved, .unresolved):
@@ -46,6 +46,6 @@ func ==<FutureType>(lhs: FutureState<FutureType>, rhs: FutureState<FutureType>) 
     return equal
 }
 
-func !=<FutureType>(lhs: FutureState<FutureType>, rhs: FutureState<FutureType>) -> Bool {
+func !=<ResultType>(lhs: FutureState<ResultType>, rhs: FutureState<ResultType>) -> Bool {
     return !(lhs == rhs)
 }
