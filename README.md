@@ -5,20 +5,18 @@
 [![License](https://img.shields.io/cocoapods/l/Promis.svg?style=flat)](http://cocoapods.org/pods/Promis)
 [![Platform](https://img.shields.io/cocoapods/p/Promis.svg?style=flat)](http://cocoapods.org/pods/Promis)
 
-# Promis
-
 This library aims to be the easiest way to introduce the power of Futures and Promises on iOS.
 
 ## Overview
 
-While starting from the JustPromises implementation and keeping the code minimalistic, this library adds the following:
+While starting from the Objective-C implementation of [JustPromises](https://github.com/justeat/JustPromises) but keeping the code minimalistic, this library adds the following:
 
 - conversion to Swift
 - usage of generics to allow great type inference that wasn't possible in Objective-C
 - overall refactoring for fresh and modern code
 - remove the unnecessary and misleading concept of Progress causing bad patterns to emerge
 
-You can read on the theory behind Future and Promises on [Wikipedia](https://en.wikipedia.org/wiki/Futures_and_promises), here is the main things you should know to get started.
+You can read about the theory behind Future and Promises on [Wikipedia](https://en.wikipedia.org/wiki/Futures_and_promises), here are the main things you should know to get started.
 
 - Promises represent the promise that a task will be fulfilled in the future while the future holds the state of such resolution.
 - Futures, when created are in the unresolved state and can be resolved with one of 3 states: with a result, an error, or being cancelled.
@@ -37,7 +35,7 @@ Promis brags about being/having:
 
 ## Alternatives
 
-Other open-source solutions exist such as
+Other open-source solutions exist such as:
 - [FutureKit](https://github.com/FutureKit/FutureKit)
 - [PromiseKit](https://github.com/mxcl/PromiseKit)
 - [JustPromises](https://github.com/justeat/JustPromises)
@@ -46,7 +44,7 @@ Promis takes inspiration from the Objective-C version of JustPromises developed 
 
 ## Usage
 
-The following example should outline the main usage of the library via chaining.
+The following example should outline the main benefits of using futures via chaining.
 
 ```swift
 let request = URLRequest(url: URL(string: "http://example.com")!)
@@ -84,7 +82,7 @@ func parse(data: Data) -> Future<[Dictionary<String,AnyObject>]>
 func map(data: [Dictionary<String,AnyObject>]) -> Future<[FooBar]>
 ```
 
-Promises and Futures are parametrized leveraging the power of the generics, meaning that Swift can infer the type of the result compile type. This was a great limitation in the Objective-C world and we can now prevent lots of issues at build time thanks to the static typing nature of the language. The state of the future is the following enum:
+Promises and Futures are parametrized leveraging the power of the generics, meaning that Swift can infer the type of the result compile type. This was a considerable limitation in the Objective-C world and we can now prevent lots of issues at build time thanks to the static typing nature of the language. The state of the future is an enum defined as follows:
 
 ```swift
 enum FutureState<ResultType> {
@@ -100,7 +98,9 @@ Promises are created and resolved like so:
 ```swift
 let promise = Promise<ResultType>()
 promise.setResult(value)
+// or
 promise.setError(error)
+// or
 promise.cancel()
 ```
 
@@ -138,7 +138,7 @@ func wrappedAsyncTask() -> Future<ResultType> {
 }
 ```
 
-you could chain an `onError` continuation before returning the future to allow in-line error handling, which I find being a very handy patter.
+you could chain an `onError` continuation before returning the future to allow in-line error handling, which I find being a very handy pattern.
 
 ```swift
 // ...
@@ -158,7 +158,7 @@ When using `then` or `thenWithResult`, the following should be taken in consider
     'Unable to infer complex closure return type; add explicit type to disambiguate'
     so you'll have to add `-> Future<NextResultType> to the block signature
     
-    You can make it complex just by adding a print statement.
+    You can make the closure complex just by adding a print statement.
     
     All the more reason to structure your code as done in the first given example :)
     */
