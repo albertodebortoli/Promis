@@ -142,7 +142,7 @@ you could chain an `onError` continuation before returning the future to allow i
 
 ```swift
 // ...
-return promise.future.onError() {error in
+return promise.future.onError {error in
     // handle/log error
 }
 ```
