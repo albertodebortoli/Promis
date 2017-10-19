@@ -47,7 +47,7 @@ func explicitTypesExample() {
          'Unable to infer complex closure return type; add explicit type to disambiguate'
          so you'll have to add `-> Future<<#NextFutureType#>> to the block signature
          
-         You can make the closure complex just by adding a print statement.
+         You can make the closure complex just by adding any extra statement (like a print).
          
          All the more reason to structure your code as done in the first given example :)
          */

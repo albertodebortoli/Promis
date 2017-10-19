@@ -9,34 +9,27 @@
 Pod::Spec.new do |s|
   s.name             = 'Promis'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of Promis.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
+  s.summary          = 'The easiest Future and Promises framework in Swift. No magic. No boilerplate.'
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+The easiest Future and Promises framework in Swift. No magic. No boilerplate.
+- Fully unit-tested and documented 💯
+- Thread-safe 🚦
+- Clean interface 👼
+- Support for chaining ⛓
+- Support for cancellation 🙅‍♂️
+- Queue-based block execution if needed 🚆
+- Result type provided via generics 🚀
+- Keeping the magic to the minimum, leaving the code in a readable state without going off of a tangent with fancy and unnecessary design decisions ಠ_ಠ
                        DESC
 
   s.homepage         = 'https://github.com/albertodebortoli/Promis'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.license          = { :type => 'Apache 2', :file => 'LICENSE' }
   s.author           = { 'Alberto De Bortoli' => 'albertodebortoli.website@gmail.com' }
   s.source           = { :git => 'https://github.com/albertodebortoli/Promis.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/albertodebo'
+  s.social_media_url = 'https://twitter.com/albertodebo'
 
   s.ios.deployment_target = '9.3'
-
   s.source_files = 'Promis/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'Promis' => ['Promis/Assets/*.png']
-  # }
+  s.frameworks = 'UIKit', 'Foundation'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end

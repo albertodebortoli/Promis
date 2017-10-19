@@ -5,13 +5,13 @@
 [![License](https://img.shields.io/cocoapods/l/Promis.svg?style=flat)](http://cocoapods.org/pods/Promis)
 [![Platform](https://img.shields.io/cocoapods/p/Promis.svg?style=flat)](http://cocoapods.org/pods/Promis)
 
-This library aims to be the easiest way to introduce the power of Futures and Promises on iOS.
+The easiest Future and Promises framework in Swift. No magic. No boilerplate.
 
 ## Overview
 
-While starting from the Objective-C implementation of [JustPromises](https://github.com/justeat/JustPromises) but keeping the code minimalistic, this library adds the following:
+While starting from the Objective-C implementation of [JustPromises](https://github.com/justeat/JustPromises) and keeping the code minimalistic, this library adds the following:
 
-- conversion to Swift
+- conversion to Swift 4
 - usage of generics to allow great type inference that wasn't possible in Objective-C
 - overall refactoring for fresh and modern code
 - remove the unnecessary and misleading concept of Progress causing bad patterns to emerge
@@ -128,9 +128,9 @@ func wrappedAsyncTask() -> Future<ResultType> {
         // resolve the promise according to how the async operations did go
         switch (data, error) {
         case (let data?, _):
-            promise.setResult(d)
+            promise.setResult(data)
         case (nil, let error?):
-        promise.setError(error)
+            promise.setError(error)
         // etc.
         }
     }
@@ -138,7 +138,7 @@ func wrappedAsyncTask() -> Future<ResultType> {
 }
 ```
 
-you could chain an `onError` continuation before returning the future to allow in-line error handling, which I find being a very handy pattern.
+you could chain an `onError` continuation before returning the future to allow in-line error handling, which I find to be a very handy pattern.
 
 ```swift
 // ...
@@ -158,7 +158,7 @@ When using `then` or `thenWithResult`, the following should be taken in consider
     'Unable to infer complex closure return type; add explicit type to disambiguate'
     so you'll have to add `-> Future<NextResultType> to the block signature
     
-    You can make the closure complex just by adding a print statement.
+    You can make the closure complex just by adding any extra statement (like a print).
     
     All the more reason to structure your code as done in the first given example :)
     */
