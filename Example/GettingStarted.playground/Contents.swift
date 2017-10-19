@@ -41,18 +41,23 @@ func explicitTypesExample() {
     let request = URLRequest(url: URL(string: "http://example.com")!)
     
     // starts by hitting an API to download data
-    getData(request: request).thenWithResult { data -> Future<[Dictionary<String,AnyObject>]> in
-        /**
-         If a block is not trivial, Swift cannot infer the type of the closure and gives the error
-         'Unable to infer complex closure return type; add explicit type to disambiguate'
-         so you'll have to add `-> Future<<#NextFutureType#>> to the block signature
-         
-         You can make the closure complex just by adding any extra statement (like a print).
-         
-         All the more reason to structure your code as done in the first given example :)
-         */
-        print("complex closure")
-        return parse(data: data)
+    getData(request: request).then { future -> Future<Data> in
+        // in the `then` continuation we receive the previous future
+        // useful in case we want to inspect the future state
+        // here we pass it throught by creating a new future
+        return Future<Data>.futureWithResolutionOfFuture(future)
+        }.thenWithResult { data -> Future<[Dictionary<String,AnyObject>]> in
+            /**
+             If a block is not trivial, Swift cannot infer the type of the closure and gives the error
+             'Unable to infer complex closure return type; add explicit type to disambiguate'
+             so you'll have to add `-> Future<<#NextFutureType#>> to the block signature
+             
+             You can make the closure complex just by adding any extra statement (like a print).
+             
+             All the more reason to structure your code as done in the first given example :)
+             */
+            print("complex closure")
+            return parse(data: data)
         }.thenWithResult { parsedData -> Future<[FooBar]> in
             // continue by mapping the parsed data
             print("complex closure")
@@ -105,7 +110,7 @@ func parse(data: Data) -> Future<[Dictionary<String,AnyObject>]> {
     }
     // could simply return promise.future, but specific error handling/logging
     // should be done here as part of the responsibilities of the function
-    return promise.future.onError() {error in
+    return promise.future.onError {error in
         // handle/log error
     }
 }
