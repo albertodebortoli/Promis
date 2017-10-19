@@ -30,3 +30,4 @@ fastlane/metadata/
 fastlane/screenshots/
 fastlane/test_output/
 code_coverage/
+.build/
