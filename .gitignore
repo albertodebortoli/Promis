@@ -31,3 +31,6 @@ fastlane/screenshots/
 fastlane/test_output/
 code_coverage/
 .build/
+
+# Irrelevant project files
+Podfile.lock
