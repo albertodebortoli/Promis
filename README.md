@@ -20,7 +20,7 @@ You can read about the theory behind Future and Promises on [Wikipedia](https://
 
 - Promises represent the promise that a task will be fulfilled in the future while the future holds the state of such resolution.
 - Futures, when created are in the unresolved state and can be resolved with one of 3 states: with a result, an error, or being cancelled.
-- Futures can be chained, allowing to avoid the [piramid of doom](https://twitter.com/piscis168/status/641237956070666240) problem, clean up asynchronous code paths and simplify error handling.
+- Futures can be chained, allowing to avoid the [pyramid of doom](https://twitter.com/piscis168/status/641237956070666240) problem, clean up asynchronous code paths and simplify error handling.
 
 Promis brags about being/having:
 
