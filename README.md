@@ -74,7 +74,7 @@ getData(request: request).thenWithResult { data in
 }
 ```
 
-the functions used in the example have the following signatures:
+The functions used in the example have the following signatures:
 
 ```swift
 func getData(request: URLRequest) -> Future<Data>
@@ -138,7 +138,7 @@ func wrappedAsyncTask() -> Future<ResultType> {
 }
 ```
 
-you could chain an `onError` continuation before returning the future to allow in-line error handling, which I find to be a very handy pattern.
+You could chain an `onError` continuation before returning the future to allow in-line error handling, which I find to be a very handy pattern.
 
 ```swift
 // ...
