@@ -28,7 +28,7 @@ The easiest Future and Promises framework in Swift. No magic. No boilerplate.
   s.source           = { :git => 'https://github.com/albertodebortoli/Promis.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/albertodebo'
 
-  s.ios.deployment_target = '9.3'
+  s.ios.deployment_target = '9.0'
   s.source_files = 'Promis/Classes/**/*'
   s.frameworks = 'UIKit', 'Foundation'
 
