@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Promis'
-  s.version          = '1.0.1'
+  s.version          = '1.1.0'
   s.summary          = 'The easiest Future and Promises framework in Swift. No magic. No boilerplate.'
   s.description      = <<-DESC
 The easiest Future and Promises framework in Swift. No magic. No boilerplate.
@@ -29,6 +29,7 @@ The easiest Future and Promises framework in Swift. No magic. No boilerplate.
   s.social_media_url = 'https://twitter.com/albertodebo'
 
   s.ios.deployment_target = '9.0'
+  s.watchos.deployment_target = '4.0'
   s.source_files = 'Promis/Classes/**/*'
   s.frameworks = 'UIKit', 'Foundation'
 
