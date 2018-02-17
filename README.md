@@ -39,6 +39,7 @@ Other open-source solutions exist such as:
 - [FutureKit](https://github.com/FutureKit/FutureKit)
 - [PromiseKit](https://github.com/mxcl/PromiseKit)
 - [JustPromises](https://github.com/justeat/JustPromises)
+- [Promises](https://github.com/google/promises)
 
 Promis takes inspiration from the Objective-C version of JustPromises developed by the iOS Team of [Just Eat](https://www.just-eat.com/) which is really concise and minimalistic, while other libraries are more weighty.
 
