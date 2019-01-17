@@ -60,7 +60,7 @@ public class Promise<ResultType>: NSObject {
      
      - parameter future: The future to use for the resolution.
      */
-    public func setResolutionOfFuture(_ future: Future<ResultType>) {
+    public func setResolution(of future: Future<ResultType>) {
         switch future.state {
         case .result(let value):
             setResult(value)

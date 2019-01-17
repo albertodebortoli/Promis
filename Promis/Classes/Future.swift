@@ -32,7 +32,7 @@ public class Future<ResultType>: NSObject {
      
      - returns: A newly created future, resolved with result.
      */
-    public class func futureWithResult(_ result: ResultType) -> Future<ResultType> {
+    public class func future(withResult result: ResultType) -> Future<ResultType> {
         let promise = Promise<ResultType>()
         promise.setResult(result)
         return promise.future
@@ -45,7 +45,7 @@ public class Future<ResultType>: NSObject {
      
      - returns: A newly created future, resolved with error.
      */
-    public class func futureWithError(_ error: Error) -> Future<ResultType> {
+    public class func future(withError error: Error) -> Future<ResultType> {
         let promise = Promise<ResultType>()
         promise.setError(error)
         return promise.future
@@ -69,12 +69,12 @@ public class Future<ResultType>: NSObject {
      
      - returns: A newly created and resolved future.
      */
-    public class func futureWithResolutionOfFuture(_ future: Future<ResultType>) -> Future<ResultType> {
+    public class func futureWithResolution(of future: Future<ResultType>) -> Future<ResultType> {
         switch future.state {
         case .result(let value):
-            return futureWithResult(value)
+            return self.future(withResult: value)
         case .error(let err):
-            return futureWithError(err)
+            return self.future(withError: err)
         default:
             return cancelledFuture()
         }
