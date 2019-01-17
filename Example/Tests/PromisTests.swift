@@ -28,6 +28,59 @@ class PromisTests: XCTestCase {
         XCTAssertFalse(f.isCancelled)
     }
     
+    func test_GivenFutureWithResult_ThenFutureHasResult() {
+        let f = Future<Bool>.future(withResult: true)
+        XCTAssertTrue(f.isResolved())
+        XCTAssertTrue(f.hasResult())
+        XCTAssertFalse(f.hasError())
+        XCTAssertFalse(f.isCancelled)
+    }
+    
+    func test_GivenFutureWithError_ThenFutureHasError() {
+        let error = NSError(domain: TestErrorDomain, code:0, userInfo:nil)
+        let f = Future<Bool>.future(withError: error)
+        XCTAssertTrue(f.isResolved())
+        XCTAssertFalse(f.hasResult())
+        XCTAssertTrue(f.hasError())
+        XCTAssertFalse(f.isCancelled)
+    }
+    
+    func test_GivenCancelledFuture_ThenFutureIsCancelled() {
+        let f = Future<Bool>.cancelledFuture()
+        XCTAssertTrue(f.isResolved())
+        XCTAssertFalse(f.hasResult())
+        XCTAssertFalse(f.hasError())
+        XCTAssertTrue(f.isCancelled)
+    }
+    
+    func test_GivenFutureWithResult_WhenCreatingFutureWithResolutionOfFuture_ThenFutureHasResult() {
+        let f = Future<Bool>.future(withResult: true)
+        let f2 = Future<Bool>.futureWithResolution(of: f)
+        XCTAssertTrue(f2.isResolved())
+        XCTAssertTrue(f2.hasResult())
+        XCTAssertFalse(f2.hasError())
+        XCTAssertFalse(f2.isCancelled)
+    }
+    
+    func test_GivenFutureWithError_WhenCreatingFutureWithResolutionOfFuture_ThenFutureHasError() {
+        let error = NSError(domain: TestErrorDomain, code:0, userInfo:nil)
+        let f = Future<Bool>.future(withError: error)
+        let f2 = Future<Bool>.futureWithResolution(of: f)
+        XCTAssertTrue(f2.isResolved())
+        XCTAssertFalse(f2.hasResult())
+        XCTAssertTrue(f2.hasError())
+        XCTAssertFalse(f2.isCancelled)
+    }
+    
+    func test_GivenCancelledFuture_WhenCreatingFutureWithResolutionOfFuture_ThenFutureIsCancelled() {
+        let f = Future<Bool>.cancelledFuture()
+        let f2 = Future<Bool>.futureWithResolution(of: f)
+        XCTAssertTrue(f2.isResolved())
+        XCTAssertFalse(f2.hasResult())
+        XCTAssertFalse(f2.hasError())
+        XCTAssertTrue(f2.isCancelled)
+    }
+    
     func test_GivenPromise_WhenSetResult_ThenFutureHasResult() {
         let p = Promise<String>()
         let f = p.future
@@ -230,7 +283,7 @@ class PromisTests: XCTestCase {
         
         let f2 = f.then { future -> Future<String> in
             XCTAssertTrue(future.hasResult())
-            return Future.futureWithResolutionOfFuture(future)
+            return Future.futureWithResolution(of: future)
         }
         
         p.setResult("42")
@@ -244,7 +297,7 @@ class PromisTests: XCTestCase {
         
         let f2 = f.then { future -> Future<String> in
             XCTAssertTrue(future.hasError())
-            return Future<String>.futureWithResolutionOfFuture(future)
+            return Future<String>.futureWithResolution(of: future)
         }
         
         let error = NSError(domain: TestErrorDomain, code:0, userInfo:nil)
@@ -259,7 +312,7 @@ class PromisTests: XCTestCase {
         
         let f2 = f.then { future -> Future<String> in
             XCTAssertTrue(future.isCancelled)
-            return Future.futureWithResolutionOfFuture(future)
+            return Future.futureWithResolution(of: future)
         }
         
         p.cancel()
@@ -394,7 +447,7 @@ class PromisTests: XCTestCase {
             }.then { future -> Future<String> in
                 XCTAssert(true, "This block should be called")
                 exp.fulfill()
-                return Future.futureWithResolutionOfFuture(future)
+                return Future.futureWithResolution(of: future)
         }
         
         p.setResult("1")
@@ -415,7 +468,7 @@ class PromisTests: XCTestCase {
             }.then { future -> Future<String> in
                 XCTAssert(true, "This block should be called")
                 exp.fulfill()
-                return Future.futureWithResolutionOfFuture(future)
+                return Future.futureWithResolution(of: future)
         }
         
         let error = NSError(domain: TestErrorDomain, code:0, userInfo:nil)
@@ -559,7 +612,7 @@ class PromisTests: XCTestCase {
         XCTAssertNotNil(targetValue.range(of: testValue))
     }
     
-    func test_GivenCanceledPromise_WhenPrintedDescription_ThenProperDescriptionIsPrinted() {
+    func test_GivenCancelledPromise_WhenPrintedDescription_ThenProperDescriptionIsPrinted() {
         let p = Promise<String>()
         p.cancel()
         let testValue = "Resolved with cancellation".lowercased()

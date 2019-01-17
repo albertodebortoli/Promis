@@ -45,7 +45,7 @@ func explicitTypesExample() {
         // in the `then` continuation we receive the previous future
         // useful in case we want to inspect the future state
         // here we pass it throught by creating a new future
-        return Future<Data>.futureWithResolutionOfFuture(future)
+        return Future<Data>.futureWithResolution(of: future)
         }.thenWithResult { data -> Future<[Dictionary<String,AnyObject>]> in
             /**
              If a block is not trivial, Swift cannot infer the type of the closure and gives the error

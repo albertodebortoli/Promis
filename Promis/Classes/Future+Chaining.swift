@@ -46,7 +46,7 @@ extension Future {
         finally(queue: queue) { future in
             let f2 = task(future)
             f2.finally(queue: queue) { fut2 in
-                promise.setResolutionOfFuture(fut2)
+                promise.setResolution(of: fut2)
             }
         }
         return promise.future
@@ -70,7 +70,7 @@ extension Future {
             }
             let f2 = continuation(value)
             f2.finally(queue: queue) { fut2 in
-                promise.setResolutionOfFuture(fut2)
+                promise.setResolution(of: fut2)
             }
         }
         return promise.future
@@ -89,11 +89,11 @@ extension Future {
         let promise = Promise<ResultType>()
         finally(queue: queue) { future in
             guard case .error(let err) = self.state else {
-                promise.setResolutionOfFuture(future)
+                promise.setResolution(of: future)
                 return
             }
             continuation(err)
-            promise.setResolutionOfFuture(future)
+            promise.setResolution(of: future)
         }
         return promise.future
     }
