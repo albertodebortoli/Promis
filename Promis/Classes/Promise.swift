@@ -8,13 +8,12 @@
 
 import Foundation
 
-public class Promise<ResultType>: NSObject {
+public class Promise<ResultType> {
     
     public let future: Future<ResultType>
     
-    public override init() {
+    public init() {
         self.future = Future()
-        super.init()
     }
     
     deinit {
@@ -24,8 +23,8 @@ public class Promise<ResultType>: NSObject {
         }
     }
     
-    public override var description: String {
-        return "<Promise: future \(self.future)>"
+    public var description: String {
+        return "<Promise: future \(self.future.description)>"
     }
     
     // MARK: Future state setting
