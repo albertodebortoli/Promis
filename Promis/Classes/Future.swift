@@ -8,18 +8,17 @@
 
 import Foundation
 
-public class Future<ResultType>: NSObject {
+public class Future<ResultType> {
     
     let cv: NSCondition
     var continuation: ((Future) -> Void)?
     private(set) public var state: FutureState<ResultType> = .unresolved
     
-    public override init() {
+    public init() {
         self.cv = NSCondition()
-        super.init()
     }
     
-    public override var description: String {
+    public var description: String {
         return "<Future: state \(stateString())>"
     }
     
