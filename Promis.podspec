@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Promis'
-  s.version          = '2.0.1'
+  s.version          = '2.1.0'
   s.summary          = 'The easiest Future and Promises framework in Swift. No magic. No boilerplate.'
   s.description      = <<-DESC
 The easiest Future and Promises framework in Swift. No magic. No boilerplate.
