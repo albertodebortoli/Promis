@@ -125,7 +125,7 @@ func map(data: [Dictionary<String,AnyObject>]) -> Future<[FooBar]> {
     print(#function)
     print("data: " + String(describing: data))
     let promise = Promise<[FooBar]>()
-    promise.setResult(data.flatMap { obj -> FooBar? in
+    promise.setResult(data.compactMap { obj -> FooBar? in
         if let value = obj["key"] as? String {
             return FooBar(value: value)
         }
