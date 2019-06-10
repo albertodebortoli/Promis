@@ -1,0 +1,16 @@
+PODS:
+  - Promis (2.2.0)
+
+DEPENDENCIES:
+  - Promis (from `../`)
+
+EXTERNAL SOURCES:
+  Promis:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Promis: 4b7c710108427d361e29a2be352dc0eff5315456
+
+PODFILE CHECKSUM: eb46108d3ff4f1db4e37ae9e2608f4196fb6fbfb
+
+COCOAPODS: 1.6.2

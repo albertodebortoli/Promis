@@ -1,7 +1,7 @@
-# Xcode
+# OS X
 .DS_Store
-*.xcscmblueprint
-*.xcbkptlist
+
+# Xcode
 build/
 *.pbxuser
 !default.pbxuser
@@ -11,26 +11,27 @@ build/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-xcuserdata
+xcuserdata/
+*.xccheckout
 profile
 *.moved-aside
 DerivedData
-.idea/
-*.irb-history
-*.xccheckout
-*.orig
-*.gcno
-*.gcda
-Pods/
-Failed_Screenshots/
-upload_dsym_results
-fastlane/report.xml
-fastlane/output/
-fastlane/metadata/
-fastlane/screenshots/
-fastlane/test_output/
-code_coverage/
-.build/
+*.hmap
+*.ipa
 
-# Irrelevant project files
-Podfile.lock
+# Bundler
+.bundle
+
+# Add this line if you want to avoid checking in source code from Carthage dependencies.
+# Carthage/Checkouts
+
+Carthage/Build
+
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
+# 
+# Note: if you ignore the Pods directory, make sure to uncomment
+# `pod install` in .travis.yml
+#
+# Pods/

@@ -1,0 +1,6 @@
+framework module Promis {
+  umbrella header "Promis-umbrella.h"
+
+  export *
+  module * { export * }
+}
