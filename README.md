@@ -1,6 +1,6 @@
 # Promis
 
-[![Build Status](https://app.bitrise.io/app/c860d39fa5072b30/status.svg?token=kgZIlFlJdRBIvy3xnG6gaQ&branch=master)](https://app.bitrise.io/app/c860d39fa5072b30)
+[![Build Status](https://travis-ci.org/albertodebortoli/Promis.svg?branch=master)](https://travis-ci.org/albertodebortoli/Promis)
 [![Version](https://img.shields.io/cocoapods/v/Promis.svg?style=flat)](http://cocoapods.org/pods/Promis)
 [![License](https://img.shields.io/cocoapods/l/Promis.svg?style=flat)](http://cocoapods.org/pods/Promis)
 [![Platform](https://img.shields.io/cocoapods/p/Promis.svg?style=flat)](http://cocoapods.org/pods/Promis)
