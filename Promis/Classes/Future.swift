@@ -167,14 +167,14 @@ public class Future<ResultType> {
         return !timeoutExpired
     }
     
-    // MARK: State setting (Private)
+    // MARK: State setting
     
     /**
      Resolves the receiver by setting a result.
      
      - parameter result: The result to use for the resolution.
      */
-    func setResult(_ result: ResultType) {
+    public func setResult(_ result: ResultType) {
         cv.lock()
         assert(state == .unresolved, "Cannot set result. Future already resolved")
         
@@ -195,7 +195,7 @@ public class Future<ResultType> {
      
      - parameter error: The error to use for the resolution.
      */
-    func setError(_ error: Error) {
+    public func setError(_ error: Error) {
         cv.lock()
         assert(state == .unresolved, "Cannot set error. Future already resolved")
         
@@ -214,7 +214,7 @@ public class Future<ResultType> {
     /**
      Resolves the receiver by cancelling it.
      */
-    func cancel() {
+    public func cancel() {
         cv.lock()
         assert(state == .unresolved, "Cannot cancel. Future already resolved")
         
