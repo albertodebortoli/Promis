@@ -1,5 +1,5 @@
 PODS:
-  - Promis (2.2.0)
+  - Promis (2.3.0)
 
 DEPENDENCIES:
   - Promis (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Promis: 6a5ff8a747b92095b21c9416d75e1fe5eaf0016b
+  Promis: 9fd23086449bd457acb7b5a5deaa4b973a237b3f
 
 PODFILE CHECKSUM: eb46108d3ff4f1db4e37ae9e2608f4196fb6fbfb
 

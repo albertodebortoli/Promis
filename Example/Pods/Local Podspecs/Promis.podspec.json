@@ -1,6 +1,6 @@
 {
   "name": "Promis",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "summary": "The easiest Future and Promises framework in Swift. No magic. No boilerplate.",
   "description": "The easiest Future and Promises framework in Swift. No magic. No boilerplate.\n- Fully unit-tested and documented 💯\n- Thread-safe 🚦\n- Clean interface 👼\n- Support for chaining ⛓\n- Support for cancellation 🙅‍♂️\n- Queue-based block execution if needed 🚆\n- Result type provided via generics 🚀\n- Keeping the magic to the minimum, leaving the code in a readable state without going off of a tangent with fancy and unnecessary design decisions ಠ_ಠ",
   "homepage": "https://github.com/albertodebortoli/Promis",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/albertodebortoli/Promis.git",
-    "tag": "2.2.0"
+    "tag": "2.3.0"
   },
   "social_media_url": "https://twitter.com/albertodebo",
   "platforms": {
