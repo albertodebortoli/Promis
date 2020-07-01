@@ -20,10 +20,11 @@
     "ios": "9.0",
     "watchos": "4.0"
   },
-  "swift_version": "5.0",
+  "swift_versions": "5.0",
   "source_files": "Promis/Classes/**/*",
   "frameworks": [
     "UIKit",
     "Foundation"
-  ]
+  ],
+  "swift_version": "5.0"
 }
