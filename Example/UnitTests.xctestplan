@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "62F6AB81-518E-4925-B31C-0C7F6B9C6EB7",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:Pods\/Pods.xcodeproj",
+          "identifier" : "E1400FA1180B6A8188795D86A04FED99",
+          "name" : "Promis"
+        }
+      ]
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Promis.xcodeproj",
+      "identifier" : "607FACCF1AFB9204008FA782",
+      "name" : "DemoApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Pods\/Pods.xcodeproj",
+        "identifier" : "295F351793509221CE75C7DD4981ADAA",
+        "name" : "Promis-Unit-UnitTests"
+      }
+    }
+  ],
+  "version" : 1
+}
