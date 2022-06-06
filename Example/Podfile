@@ -1,14 +1,10 @@
-source 'https://github.com/CocoaPods/Specs.git'
+source 'https://cdn.cocoapods.org/'
 
-platform :ios, '9.3'
 use_frameworks!
 
-target 'Promis_Example' do
-  pod 'Promis', :path => '../'
+target 'DemoApp' do
+  platform :ios, 13.0
 
-  target 'Promis_Tests' do
-    inherit! :search_paths
+  pod 'Promis', :path => '../', :testspecs => ['UnitTests']
 
-    
-  end
 end

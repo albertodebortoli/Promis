@@ -1,16 +1,18 @@
 PODS:
-  - Promis (2.3.0)
+  - Promis (2.2.0)
+  - Promis/UnitTests (2.2.0)
 
 DEPENDENCIES:
   - Promis (from `../`)
+  - Promis/UnitTests (from `../`)
 
 EXTERNAL SOURCES:
   Promis:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Promis: 9fd23086449bd457acb7b5a5deaa4b973a237b3f
+  Promis: cb43375a9674d5bce6823de98d951f4d1307cbc7
 
-PODFILE CHECKSUM: eb46108d3ff4f1db4e37ae9e2608f4196fb6fbfb
+PODFILE CHECKSUM: 2caa75d2621c0c8241e46fbd838a1f1d846c02f8
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.11.3
