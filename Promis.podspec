@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Promis'
-  s.version          = '2.3.0'
+  s.version          = ENV['LIB_VERSION']
   s.summary          = 'The easiest Future and Promises framework in Swift. No magic. No boilerplate.'
   s.description      = <<-DESC
 The easiest Future and Promises framework in Swift. No magic. No boilerplate.
@@ -23,15 +23,19 @@ The easiest Future and Promises framework in Swift. No magic. No boilerplate.
                        DESC
 
   s.homepage         = 'https://github.com/albertodebortoli/Promis'
-  s.license          = { :type => 'Apache 2', :file => 'LICENSE' }
-  s.author           = { 'Alberto De Bortoli' => 'albertodebortoli.website@gmail.com' }
+  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.author           = { 'Alberto De Bortoli' => 'albertodebortoli.com' }
   s.source           = { :git => 'https://github.com/albertodebortoli/Promis.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/albertodebo'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '13.0'
   s.watchos.deployment_target = '4.0'
   s.swift_version = '5.0'
-  s.source_files = 'Promis/Classes/**/*'
-  s.frameworks = 'UIKit', 'Foundation'
 
+  s.source_files = 'Framework/Sources/**/*.swift'
+  s.frameworks = 'Foundation'
+
+  s.test_spec 'UnitTests' do |test_spec|
+    test_spec.source_files = 'Tests/Sources/**/*.swift'
+  end
 end
