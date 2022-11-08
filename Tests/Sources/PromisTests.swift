@@ -547,7 +547,7 @@ class PromisTests: XCTestCase {
         let p3 = Promise<String>()
         
         let futures = [p1.future, p2.future, p3.future]
-        let allFuture = Future.whenAll(futures)
+        let allFuture = Future<String>.whenAll(futures)
         
         XCTAssertFalse(allFuture.hasResult())
         p3.setResult("3")
@@ -559,9 +559,9 @@ class PromisTests: XCTestCase {
         XCTAssertTrue(allFuture.hasResult())
         
         let results = allFuture.result!
-        XCTAssertEqual(results[0].result!, "1")
-        XCTAssertEqual(results[1].result!, "2")
-        XCTAssertEqual(results[2].result!, "3")
+        XCTAssertEqual(results[0].getResult(), "1")
+        XCTAssertEqual(results[1].getResult(), "2")
+        XCTAssertEqual(results[2].getResult(), "3")
     }
     
     func test_GivenPromises_WhenAllPromisesAreSatisfied_ThenWhenAllFutureHasResult() {
@@ -570,7 +570,7 @@ class PromisTests: XCTestCase {
         let p3 = Promise<String>()
         
         let futures = [p1.future, p2.future, p3.future]
-        let allFuture = Future.whenAll(futures)
+        let allFuture = Future<String>.whenAll(futures)
         
         XCTAssertFalse(allFuture.hasResult())
         p3.cancel()
@@ -583,10 +583,9 @@ class PromisTests: XCTestCase {
         XCTAssertTrue(allFuture.hasResult())
         
         let results = allFuture.result!
-        XCTAssertEqual(results[0].result, "1")
-        XCTAssertTrue(results[1].hasError())
-        XCTAssert(results[1].state == .error(error))
-        XCTAssertTrue(results[2].isCancelled)
+        XCTAssertEqual(results[0].getResult(), "1")
+        XCTAssertNotNil(results[1].getError())
+        XCTAssertTrue(results[2].isCancelled())
     }
     
     func test_GivenUnresolvedPromise_WhenPrintedDescription_ThenProperDescriptionIsPrinted() {
