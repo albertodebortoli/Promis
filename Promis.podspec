@@ -29,7 +29,6 @@ The easiest Future and Promises framework in Swift. No magic. No boilerplate.
   s.social_media_url = 'https://twitter.com/albertodebo'
 
   s.ios.deployment_target = '13.0'
-  s.watchos.deployment_target = '4.0'
   s.swift_version = '5.0'
 
   s.source_files = 'Framework/Sources/**/*.swift'
